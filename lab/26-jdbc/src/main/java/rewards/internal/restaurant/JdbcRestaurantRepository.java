@@ -2,8 +2,6 @@ package rewards.internal.restaurant;
 
 import common.money.Percentage;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import rewards.Dining;
 import rewards.internal.account.Account;
 
@@ -40,19 +38,28 @@ import java.sql.SQLException;
 
 public class JdbcRestaurantRepository implements RestaurantRepository {
 
-	private JdbcTemplate jdbcTemplate;
+	private DataSource dataSource;
 
-	public JdbcRestaurantRepository(final JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	public JdbcRestaurantRepository(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	public Restaurant findByMerchantNumber(String merchantNumber) {
 		String sql = "select MERCHANT_NUMBER, NAME, BENEFIT_PERCENTAGE, BENEFIT_AVAILABILITY_POLICY"
 				+ " from T_RESTAURANT where MERCHANT_NUMBER = ?";
+		Restaurant restaurant = null;
 
-		return this.jdbcTemplate.queryForObject(sql,
-				(rs, rowNum) -> mapRestaurant(rs),
-				merchantNumber);
+		try (Connection conn = dataSource.getConnection();
+			 PreparedStatement ps = conn.prepareStatement(sql) ){
+			ps.setString(1, merchantNumber);
+			ResultSet rs = ps.executeQuery();
+			advanceToNextRow(rs);
+			restaurant = mapRestaurant(rs);
+		} catch (SQLException e) {
+			throw new RuntimeException("SQL exception occurred finding by merchant number", e);
+		}
+
+		return restaurant;
 	}
 
 	/**
@@ -93,7 +100,7 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	 * More types could be added easily by enhancing this method. For example, 'W' for 'Weekdays only' or 'M' for 'Max
 	 * Rewards per Month'. Some of these types might require additional database column values to be configured, for
 	 * example a 'MAX_REWARDS_PER_MONTH' data column.
-	 *
+	 * 
 	 * @param rs the result set used to map the policy object from database column values
 	 * @return the matching benefit availability policy
 	 * @throws IllegalArgumentException if the mapping could not be performed

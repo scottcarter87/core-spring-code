@@ -19,10 +19,8 @@
          <plugins>
 		    <!-- TO-DO-01 : Add the Spring Boot Plugin - see detailed instructions
 		         for the XML you need. -->
-             <plugin>
-                 <groupId>org.springframework.boot</groupId>
-                 <artifactId>spring-boot-maven-plugin</artifactId>
-             </plugin>
+
+
             <!-- Ensure resources are handled correctly -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -30,7 +28,7 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <dependencies>
        <!--
           // Although we are not using Spring Boot yet, we are using
@@ -40,22 +38,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+ 
         <!-- TO-DO-02 : Refactor from discrete Spring Framework
              dependencies to JDBC and Test Spring Boot Starters -->
-
+ 
         <!-- Needed for the Spring JdbcTemplate -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
 
         <!--  Spring Integration testing support -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
-
+        
         <!-- Database - DO NOT MODIFY -->
         <dependency>
             <groupId>org.hsqldb</groupId>
