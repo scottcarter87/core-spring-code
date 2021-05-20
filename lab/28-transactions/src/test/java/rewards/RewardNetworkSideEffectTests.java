@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 
@@ -89,12 +90,12 @@ public class RewardNetworkSideEffectTests {
 				jdbcTemplate.queryForObject(SAVINGS_SQL, Double.class, "Corgan"));
 	}
 
-	@Test
+	@Test @Transactional
 	public void testCollision1stTime() {
 		runTest();
 	}
 
-	@Test
+	@Test @Transactional
 	public void testCollision2ndTime() {
 		runTest();
 	}

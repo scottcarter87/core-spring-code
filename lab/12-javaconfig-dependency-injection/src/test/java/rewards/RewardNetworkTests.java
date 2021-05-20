@@ -1,38 +1,29 @@
 package rewards;
 
 import common.money.MonetaryAmount;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/**
- * A system test that verifies the components of the RewardNetwork application work together to reward for dining
- * successfully. Uses Spring to bootstrap the application for use in a test environment.
- */
-
-// TODO-09: Refactor this test code
-// - Run this test without making any change, it will fail - think about why it fails
-// - Replace the @ExtendWith and @ContextConfiguration annotations below with @SpringBootTest
-//   (There is no need to specify any configuration classes,
-//    because @SpringBootTest will find and use the configuration
-//    of RewardApplication automatically.)
-// - Run the test, it should now pass.
-// - Think about where auto-configuration is enabled for the test.
-                   // Replace me
-@SpringBootTest// Replace me
 public class RewardNetworkTests {
 
-    /**
-     * The object being tested.
-     */
-    @Autowired
     private RewardNetwork rewardNetwork;
+
+    @BeforeEach
+    public void setup() {
+        final ApplicationContext context = SpringApplication.run((TestInfrastructureConfig.class));
+        this.rewardNetwork = context.getBean(RewardNetwork.class);
+    }
+
+    @Test
+    public void autowireTest() {
+
+    }
 
     @Test
     public void testRewardForDining() {
@@ -40,7 +31,7 @@ public class RewardNetworkTests {
         Dining dining = Dining.createDining("100.00", "1234123412341234", "1234567890");
 
         // call the 'rewardNetwork' to test its rewardAccountFor(Dining) method
-        RewardConfirmation confirmation = rewardNetwork.rewardAccountFor(dining);
+        RewardConfirmation confirmation = this.rewardNetwork.rewardAccountFor(dining);
 
         // assert the expected reward confirmation results
         assertNotNull(confirmation);
@@ -50,7 +41,7 @@ public class RewardNetworkTests {
         AccountContribution contribution = confirmation.getAccountContribution();
         assertNotNull(contribution);
 
-        // the contribution account number should be '123456789'
+        // the account number should be '123456789'
         assertEquals("123456789", contribution.getAccountNumber());
 
         // the total contribution amount should be 8.00 (8% of 100.00)
@@ -63,4 +54,5 @@ public class RewardNetworkTests {
         assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Annabelle").getAmount());
         assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Corgan").getAmount());
     }
+
 }

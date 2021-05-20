@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -17,13 +18,14 @@ import accounts.internal.JpaAccountManager;
  */
 @Configuration
 @EntityScan("rewards.internal")
+@ComponentScan(basePackages = "aspects")
 @EnableTransactionManagement
 public class AccountsConfig implements WebMvcConfigurer {
 
 	/**
 	 * A new service has been created for accessing Account information. Internally
 	 * it uses JPA directly so no Repository class is required.
-	 * 
+	 *
 	 * @param entityManager
 	 *            The JPA Entity Manager (actually a proxy).
 	 *            <p>
@@ -42,7 +44,7 @@ public class AccountsConfig implements WebMvcConfigurer {
 
 	/**
 	 * Enables the home page which is using server-side rendering of a minimal view.
-	 * 
+	 *
 	 * @param registry
 	 *            View controller registry. Allows you to register simple mappings
 	 *            of URLs to static views (since there is no dynamic content a

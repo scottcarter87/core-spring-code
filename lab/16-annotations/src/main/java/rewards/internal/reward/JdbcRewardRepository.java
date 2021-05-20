@@ -8,6 +8,9 @@ import rewards.RewardConfirmation;
 import javax.sql.DataSource;
 import java.sql.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 /**
  * JDBC implementation of a reward repository that
  * records the result of a reward transaction by
@@ -20,7 +23,7 @@ import java.sql.*;
  * - Inject dataSource by annotating setDataSource() method
  *   with @Autowired.
  */
-
+@Repository
 public class JdbcRewardRepository implements RewardRepository {
 
 	private DataSource dataSource;
@@ -29,6 +32,7 @@ public class JdbcRewardRepository implements RewardRepository {
 	 * Sets the data source this repository will use to insert rewards.
 	 * @param dataSource the data source
 	 */
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
